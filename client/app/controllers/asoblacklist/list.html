@@ -1,0 +1,98 @@
+<div class="page page-table" data-ng-controller="AsoBlacklistListCtrl">
+
+    <div class="row ui-section">
+    <div class="col-lg-8 clearfix">
+        <h2 class="section-header">Manage ASO Blacklist</h2>
+    </div>
+    <div class="col-md-12">
+        <section class="panel panel-default table-dynamic cl-panel-loading">
+        	<div class="panel-body">
+		        <div class="table-filters">
+	            <div class="row">
+		            <div class="col-sm-4 col-xs-12">
+		            	<md-button class="md-raised btn-w-lg md-primary" data-ng-click="gotoCreatePage()">Add ASO to Blacklist</md-button>
+		            </div>
+	            </div>
+	            <div class='divider divider-md'></div>
+	            <div class="row">
+		            <div class="col-md-4 col-xs-10">
+	                <input type="text"
+	                     placeholder="Search..."
+	                     class="form-control"
+	                     data-ng-model="searchKeyword"
+	                     data-ng-model-options='{ debounce: 1000 }'
+	                     data-ng-change="searchKeywordChange()">
+		            </div>
+		            <div class="col-md-4 col-xs-2">
+                  <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40" ng-show='searchUpdating'></md-progress-circular>
+	              </div>
+            	</div>
+		        </div>
+		        <div class="table-responsive">
+			        <table class="table table-hover cl-table-with-buttons">
+			            <thead>
+				            <tr>
+				                <th><div class="th">
+				                ASO
+				                <span class="fa fa-angle-up"
+				                    data-ng-click=" order('aso') "
+				                    data-ng-class="{active: row == 'aso'}"></span>
+				                <span class="fa fa-angle-down"
+				                    data-ng-click=" order('-aso') "
+				                    data-ng-class="{active: row == '-aso'}"></span>
+				                </div></th>
+				                <th><div class="th">
+				                Description
+				                <span class="fa fa-angle-up"
+				                    data-ng-click=" order('description') "
+				                    data-ng-class="{active: row == 'description'}"></span>
+				                <span class="fa fa-angle-down"
+				                    data-ng-click=" order('-description') "
+				                    data-ng-class="{active: row == '-description'}"></span>
+				                </div></th>
+				            </tr>
+						</thead>
+						<tbody>
+				            <tr data-ng-repeat="item in items" data-ng-click="editAso(item._id)">
+				                <td>{{item.aso}}</td>
+				                <td>{{item.description}}</td>
+				                <td ng-show="userRole == 'admin'" class='buttons text-center'>
+				                	<md-button class="md-icon-button md-warn" aria-label="Delete Aso" data-ng-click="deleteAso($event, item._id)"><span class="fa fa-remove"></span></md-button>
+				                </td>
+				            </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+
+      <footer class="table-footer">
+          <div class="row">
+          <div class="col-md-6 page-num-info">
+              <span>
+              Show 
+              <select data-ng-model="numPerPage"
+                  data-ng-options="num for num in numPerPageOpt"
+                  data-ng-change="onNumPerPageChange()">
+              </select> 
+              entries per page
+              </span>
+          </div>
+            <div class="col-md-6 text-right pagination-container">
+              <ul uib-pagination class="pagination-sm"
+                  ng-model="currentPage"
+                  total-items="total"
+                  max-size="4"
+                  ng-change="select(currentPage)"
+                  items-per-page="numPerPage"
+                  rotate="false"
+                  previous-text="&lsaquo;" next-text="&rsaquo;"
+                  boundary-links="true"></ul>
+            </div>
+          </div>
+      </footer>
+
+    </section>
+    </div>
+  	</div>
+    
+</div>

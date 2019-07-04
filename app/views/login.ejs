@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="/this-is-a-static-dir/bower_components/angular-material/angular-material.min.css">
+	<link rel="stylesheet" href="/this-is-a-static-dir/styles/bootstrap.css">
+    <link rel="stylesheet" href="/this-is-a-static-dir/styles/ui.css">
+    <link rel="stylesheet" href="/this-is-a-static-dir/styles/main.css">
+    <style>
+			.container-fluid{
+				padding: 0px;
+				overflow: hidden;
+			}
+			.row{
+				padding: 0px;
+			}
+			.background {
+				background: url('/this-is-a-static-dir/images/assets/bg.png');
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size:cover;
+				height: 100vh;
+				padding: 0px;
+			}
+			.vector {
+				background-image: url(/this-is-a-static-dir/images/assets/bg.jpg);
+				background-repeat: no-repeat;
+				background-position: center;
+				-webkit-background-size: contain;
+				-moz-background-size: contain;
+				-o-background-size:contain;
+				background-size: contain;
+				height: 85vh;
+			}
+			.letter {
+				position: absolute;
+				bottom: 10%;
+    		left: 10%;
+			}
+			h2{
+				color: #fff;
+			}
+			.line {
+				width: 50%;
+    		margin-top: -15px;
+				margin-left: -7px;
+			}
+			.form {
+				background-color: #fff;
+				height: 100vh;
+				padding: 0px;
+			}
+			.title {
+				text-align: center;
+				margin-top: 15%;
+			}
+			.title .circle{
+				width: 30%;
+			}
+			.title h4{
+				font-size: 18px;
+				color: #2d4c73;
+				margin-bottom: 4%;
+			}
+			.form-group {
+				width: 65%;
+    		margin-left: 18%;
+			}
+			.form-control {
+				height: 45px;
+			}
+			label {
+				color: #6d819d;
+				font-weight: 500;
+			}
+			a {
+				font-weight: 500;
+			}
+			.form-check {
+				width: 65%;
+				margin-left: 18%;
+				display: flex;
+				justify-content: space-between;
+				cursor: pointer;
+			}
+			.form-check .form-check-label {
+				font-size: 11px;
+			}
+			.form-check a {
+				color: #6d819d;
+			}
+			.form-check .form-check-input {
+				transform: scale(1.2);
+			}
+			.form-submit {
+				text-align: center;
+				margin-top: 3%;
+				margin-bottom: 5%;
+			}
+			.form-submit .btn:focus {
+				outline: none;
+			}
+			.submit {
+				background-color: #dd4b39;
+				width: 37%;
+				border-radius: 20px;
+				height: 42px;
+				outline: 0;
+			}
+			.form-register {
+				text-align: center;
+    		font-size: 13px;
+			}
+			.form-register a {
+				text-decoration-line: underline;
+				color: #9d8af6;
+			}
+    </style>
+	<title><%= title %></title>
+</head>
+
+<body class="container-fluid">
+	<div class="row">
+		<div class="col-lg-8 col-md-8 background">
+			<div class="vector">
+				<div class="letter">
+					<h2>We've got everything you need,</h2>
+					<h2>all in one place</h2>
+					<img class="line" src="/this-is-a-static-dir/images/assets/line.png"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-4 form">
+			<div class="title">
+				<img class="circle" src="/this-is-a-static-dir/images/assets/circle.png"/>
+				<h4>Login into Your Account</h4>
+			</div>
+			<form action="/admin/action/login" method="post" name="login" id="login">
+				<div class="form-group">
+					<label for="username">User ID*</label>
+					<input type="text" class="form-control" id="username" name="username" placeholder="username">
+				</div>
+				<div class="form-group">
+					<label for="password">Password*</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="******************">
+				</div>
+				<!-- <div class="form-check">
+					<div>
+						<input type="checkbox" class="form-check-input" id="keep-signed-in">
+						<label class="form-check-label">Keep me signed in</label>
+					</div>
+					<a class="form-check-label">Forgot Password?</a>
+				</div> -->
+				<div class="form-submit">
+					<button type="submit" class="btn btn-danger submit">Login</button>
+				</div>
+				<!-- <div class="form-register">
+					<label>
+						Don't have an account?
+						<a href="#/">Register Now</a>
+					</label>
+				</div> -->
+			</form>
+		</div>
+	</div>
+</body>
+
+	<script type="text/javascript">
+		document.getElementById('username').focus();
+	</script>
+</body>
+
+</html>
