@@ -19,13 +19,38 @@ const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
 
-function handleLinkPassedFilter(req, res, ip, link, trafficID) {
+function checkCookie(req, res) {
+  let customCookie = req.cookies.customCookie;
+  if (customCookie) {
+    let visitedCount = req.cookies.visitedCount;
+    if (visitedCount && visitedCount == 1) {
+      res.cookie('visitedCount', 2);
+      console.log('pass, second visit');
+      return true;
+    } else {
+      console.log('block, over 3 visit');
+      return false;
+    }
+  } else {
+    res.cookie('customCookie', 'customCookie', { maxAge: 20000 });
+    res.cookie('visitedCount', 1);
+    console.log('pass, first visit');
+    return true;
+  }
+}
 
+function handleLinkPassedFilter(req, res, ip, link, trafficID) {
   if (link.type === 0 || !link.link_voluum)
     proxy.proxySafe(req, res, trafficID);
 
-  else if (typeof link.type === 'undefined' || link.type === 1)
-    proxy.proxyPresalePage(req, res, ip, link, trafficID);
+  else if (typeof link.type === 'undefined' || link.type === 1) {
+    let existCookie = checkCookie(req, res);
+    if (existCookie) {
+      proxy.proxyPresalePage(req, res, ip, link, trafficID);
+    } else {
+      proxy.proxySafe(req, res, trafficID);
+    }
+  }
 
   else if (link.type === 2)
     res.redirect(link.link_voluum);
@@ -38,11 +63,7 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
 
 function loadLink(req, res, link, ip, connection, isOfferPage, time, isBot, trafficID, usePage) {
   const isLinkPage = req.originalUrl === link.link_generated;
-  
-  //res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  
   checkFilter(req, link, ip, connection, isOfferPage, usePage, (passedFilter, trafficRecord) => {
-    //passedFilter = false;
 
     if (isLinkPage) {
       record.recordLinkTraffic(passedFilter, trafficRecord, ip, time, isBot)

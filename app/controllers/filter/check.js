@@ -28,6 +28,10 @@ module.exports.checkFilter = (req, link, ip, connection, isOfferPage, usePage, c
     return cb(usePage === 'dirty', trafficRecord);
   }
 
+  // if (ip == '::1') {
+  //   return cb(true, trafficRecord)
+  // }
+
   // Link disabled
   if (!link.status && !isOfferPage)
     return cb(false, trafficRecord)
