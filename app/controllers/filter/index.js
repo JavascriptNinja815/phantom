@@ -22,13 +22,6 @@ let linkArray = {
   'first': 'https://trendologi.com/set-cookie.php',
   'second': 'http://buzznewsy.com/set-cookie.php'
 }
-// function createCookie() {
-//   request.get({
-//     'url': linkArray.first
-//   })
-//   .then(response => checkCookie(req, res))
-//   .catch(err => console.log(err))
-// }
 function checkCookie(req, res) {
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
@@ -52,9 +45,7 @@ function checkCookie(req, res) {
     res.cookie('visitedCount', 1);
     request.get({
       'url': linkArray.first
-    })
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    }, (err, res) => {})
     console.log('pass, first visit');
     return true;
   }
