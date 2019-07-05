@@ -20,7 +20,6 @@ module.exports.checkFilter = (req, link, ip, connection, isOfferPage, usePage, c
   let asoWildCard      = helpers.asoWildCardBlocking(connection);
   let device_os        = helpers.getUserAgent(req); // 4/16/2018 added by Jin
 
-  // let block_corporate  = helpers.blockCorporate(connection); // 4/29/2019 added by Jin
 
   let trafficRecord = { req, ip, link, connection }
 
@@ -33,12 +32,7 @@ module.exports.checkFilter = (req, link, ip, connection, isOfferPage, usePage, c
   if (!link.status && !isOfferPage)
     return cb(false, trafficRecord)
   
-  // if (!isOfferPage && link.network === 'Outbrain') {
-  //   let referer = req.get("referer");
-    
-  //   if (!referer || !referer.toLowerCase().includes('paid.outbrain.com')) 
-  //     return cb(false, trafficRecord);
-  // }
+
   if (!isOfferPage) {
     let referer = req.get("referer");
     if (link.network === 'Outbrain') {
@@ -46,7 +40,10 @@ module.exports.checkFilter = (req, link, ip, connection, isOfferPage, usePage, c
         return cb(false, trafficRecord);
     }
     if (link.network === 'Facebook') {
-      if (!referer || !referer.toLowerCase().includes('m.facebook.com') || !referer.toLowerCase().includes('facebook.com'))
+      if (!referer || !referer.toLowerCase().includes('m.facebook.com')
+      || !referer.toLowerCase().includes('facebook.com')
+      || !referer.toLowerCase().includes('l.facebook.com')
+      || !referer.toLowerCase().includes('lm.facebook.com'))
         return cb(false, trafficRecord)
     }
   }

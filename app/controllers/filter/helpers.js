@@ -96,7 +96,9 @@ function checkAsoCriterion(criterion, aso) {
 //create by Jin 3/1/2019
 //block any traffic that contains "department or federal"
 function asoWildCardBlocking(connection) {
-  let aso = connection.aso.toLowerCase();
+  let aso = '';
+  if (connection.aso) 
+    aso = connection.aso.toLowerCase();
   if (aso.includes('department') || aso.includes('federal')) {
     return false;
   }

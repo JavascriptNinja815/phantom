@@ -1,9 +1,6 @@
 #ignore idea folder 
 .idea/
 .DS_Store/
-.env
-.env.example
-.env.og
-.env.yg
+
 
 
