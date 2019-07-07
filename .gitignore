@@ -1,5 +1,7 @@
 #ignore idea folder 
 .idea/
 .DS_Store/
+/node_modules/
+/dump.rdb
 
 

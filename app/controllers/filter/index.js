@@ -18,35 +18,39 @@ const mailGun = require('mailgun').Mailgun;
 const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
-let linkArray = {
-  'first': 'https://trendologi.com/set-cookie.php',
-  'second': 'http://buzznewsy.com/set-cookie.php'
-}
-function checkCookie(req, res) {
+// let linkArray = {
+//   'first': 'https://trendologi.com/set-cookie.php',
+//   'second': 'http://buzznewsy.com/set-cookie.php'
+// }
+function checkCookie(req, res, linkArray) {
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
-      // request.get({
-      //   'url': linkArray.first
-      // })
-      // .then(res => console.log(res))
-      // .catch(err => console.log(err))
-
       res.cookie('visitedCount', 2);
+      for (let link of linkArray) {
+        request.get({
+          'url': link + '/setCookies/cookie2.php'
+        })
+      }
+      console.log(req.cookies);
       console.log('pass, second visit');
       return true;
     } else {
       console.log('block, over 3 visit');
+      console.log(req.cookies);
       return false;
     }
   } else {
     res.cookie('customCookie', 'customCookie', { maxAge: 20000 });
     res.cookie('visitedCount', 1);
-    request.get({
-      'url': linkArray.first
-    }, (err, res) => {})
+    for (let link of linkArray) {
+      request.get({
+        'url': link + '/setCookies/cookie1.php'
+      })
+    }
     console.log('pass, first visit');
+    console.log(req.cookies);
     return true;
   }
 }
@@ -56,12 +60,22 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
     proxy.proxySafe(req, res, trafficID);
 
   else if (typeof link.type === 'undefined' || link.type === 1) {
-    let existCookie = checkCookie(req, res);
-    if (existCookie) {
-      proxy.proxyPresalePage(req, res, ip, link, trafficID);
-    } else {
-      proxy.proxySafe(req, res, trafficID);
-    }
+    let linkArray = [];
+    Link.find({}, (err, links) => {
+      if (err || !links) return err;
+      else {
+        for (let link of links) {
+          let safeLink = url.parse(link.link_safe);
+          linkArray.push(safeLink.protocol + '//' + safeLink.hostname);
+        }
+        let existCookie = checkCookie(req, res, linkArray);
+        if (existCookie) {
+          proxy.proxyPresalePage(req, res, ip, link, trafficID);
+        } else {
+          proxy.proxySafe(req, res, trafficID);
+        }
+      }
+    })
   }
 
   else if (link.type === 2)
