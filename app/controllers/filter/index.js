@@ -28,7 +28,9 @@ function checkCookie(req, linkArray) {
         console.log(link + '/setCookies/cookie1.php')
         request.get({
           'url': link + '/setCookies/cookie2.php'
-        }, (err, res) => {})
+        }, (err, response) => {
+          if (err || response !== 302) console.log(err);
+        })
       }
       console.log(req.cookies);
       console.log('pass, second visit');
@@ -43,7 +45,9 @@ function checkCookie(req, linkArray) {
       console.log(link + '/setCookies/cookie1.php')
       request.get({
         'url': link + '/setCookies/cookie1.php'
-      }, (err, res) => {})
+      }, (err, res) => {
+        if (err || response !== 302) console.log(err);
+      })
     }
     console.log('pass, first visit');
     console.log(req.cookies);
@@ -66,6 +70,7 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
         }
         let existCookie = checkCookie(req, linkArray);
         if (existCookie) {
+          console.log('existCookie', existCookie);
           proxy.proxyPresalePage(req, res, ip, link, trafficID);
         } else {
           proxy.proxySafe(req, res, trafficID);
