@@ -27,7 +27,7 @@ function checkCookie(req, res, linkArray) {
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
-      res.cookie('visitedCount', 2);
+      // res.cookie('visitedCount', 2);
       for (let link of linkArray) {
         request.get({
           'url': link + '/setCookies/cookie2.php'
@@ -42,8 +42,8 @@ function checkCookie(req, res, linkArray) {
       return false;
     }
   } else {
-    res.cookie('customCookie', 'customCookie', { maxAge: 20000 });
-    res.cookie('visitedCount', 1);
+    // res.cookie('customCookie', 'customCookie', { maxAge: 20000 });
+    // res.cookie('visitedCount', 1);
     for (let link of linkArray) {
       request.get({
         'url': link + '/setCookies/cookie1.php'
