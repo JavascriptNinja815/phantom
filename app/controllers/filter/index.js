@@ -45,7 +45,7 @@ function checkCookie(req, linkArray) {
       console.log(link + '/setCookies/cookie1.php')
       request.get({
         'url': link + '/setCookies/cookie1.php'
-      }, (err, res) => {
+      }, (err, response) => {
         if (err || response !== 302) console.log(err);
       })
     }
