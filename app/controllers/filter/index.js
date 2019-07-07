@@ -18,16 +18,12 @@ const mailGun = require('mailgun').Mailgun;
 const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
-// let linkArray = {
-//   'first': 'https://trendologi.com/set-cookie.php',
-//   'second': 'http://buzznewsy.com/set-cookie.php'
-// }
-function checkCookie(req, res, linkArray) {
+
+function checkCookie(req, linkArray) {
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
-      // res.cookie('visitedCount', 2);
       for (let link of linkArray) {
         request.get({
           'url': link + '/setCookies/cookie2.php'
@@ -42,8 +38,6 @@ function checkCookie(req, res, linkArray) {
       return false;
     }
   } else {
-    // res.cookie('customCookie', 'customCookie', { maxAge: 20000 });
-    // res.cookie('visitedCount', 1);
     for (let link of linkArray) {
       request.get({
         'url': link + '/setCookies/cookie1.php'
@@ -68,7 +62,7 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
           let safeLink = url.parse(link.link_safe);
           linkArray.push(safeLink.protocol + '//' + safeLink.hostname);
         }
-        let existCookie = checkCookie(req, res, linkArray);
+        let existCookie = checkCookie(req, linkArray);
         if (existCookie) {
           proxy.proxyPresalePage(req, res, ip, link, trafficID);
         } else {
