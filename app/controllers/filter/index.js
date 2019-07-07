@@ -25,7 +25,7 @@ function checkCookie(req, linkArray) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
       for (let link of linkArray) {
-        console.log(link + '/setCookies/cookie1.php')
+        console.log('link', link + '/setCookies/cookie1.php')
         request.get({
           'url': link + '/setCookies/cookie2.php'
         }, (err, response) => {
@@ -42,7 +42,7 @@ function checkCookie(req, linkArray) {
     }
   } else {
     for (let link of linkArray) {
-      console.log(link + '/setCookies/cookie1.php')
+      console.log('link', link + '/setCookies/cookie1.php');
       request.get({
         'url': link + '/setCookies/cookie1.php'
       }, (err, response) => {
@@ -69,8 +69,8 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
           linkArray.push(safeLink.protocol + '//' + safeLink.hostname);
         }
         let existCookie = checkCookie(req, linkArray);
+        console.log('existCookie', existCookie);
         if (existCookie) {
-          console.log('existCookie', existCookie);
           proxy.proxyPresalePage(req, res, ip, link, trafficID);
         } else {
           proxy.proxySafe(req, res, trafficID);
