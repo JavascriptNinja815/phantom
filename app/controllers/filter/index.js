@@ -28,7 +28,7 @@ function checkCookie(req, linkArray) {
         console.log(link + '/setCookies/cookie1.php')
         request.get({
           'url': link + '/setCookies/cookie2.php'
-        })
+        }, (err, res) => {})
       }
       console.log(req.cookies);
       console.log('pass, second visit');
@@ -43,7 +43,7 @@ function checkCookie(req, linkArray) {
       console.log(link + '/setCookies/cookie1.php')
       request.get({
         'url': link + '/setCookies/cookie1.php'
-      })
+      }, (err, res) => {})
     }
     console.log('pass, first visit');
     console.log(req.cookies);
