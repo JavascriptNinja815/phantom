@@ -25,6 +25,7 @@ function checkCookie(req, linkArray) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
       for (let link of linkArray) {
+        console.log(link + '/setCookies/cookie1.php')
         request.get({
           'url': link + '/setCookies/cookie2.php'
         })
@@ -39,6 +40,7 @@ function checkCookie(req, linkArray) {
     }
   } else {
     for (let link of linkArray) {
+      console.log(link + '/setCookies/cookie1.php')
       request.get({
         'url': link + '/setCookies/cookie1.php'
       })
