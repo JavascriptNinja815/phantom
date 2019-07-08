@@ -19,39 +19,39 @@ const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
 
-function checkCookie(req, linkArray) {
+function requestAsync(url) {
+  return new Promise((resolve, reject) => {
+    request(url, (err, response, body) => {
+      if (err) return reject(err, response, body);
+      resolve(JSON.parse(body));
+    });
+  });
+}
+async function getParallel(req, res, ip, link, trafficID, urls) {
+  try {
+    await Promise.all(urls.map(requestAsync));
+    proxy.proxyPresalePage(req, res, ip, link, trafficID);
+  } catch(err) {
+    console.error(err)
+  }
+}
+
+function checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls) {
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
-      for (let link of linkArray) {
-        console.log('link', link + '/setCookies/cookie1.php')
-        request.get({
-          'url': link + '/setCookies/cookie2.php'
-        }, (err, response) => {
-          if (err || response !== 302) console.log(err);
-        })
-      }
-      console.log(req.cookies);
-      console.log('pass, second visit');
-      return true;
+      getParallel(req, res, ip, link, trafficID, secondUrls);
+      console.log('pass, visited 2 times');
     } else {
       console.log('block, over 3 visit');
       console.log(req.cookies);
-      return false;
+      proxy.proxySafe(req, res, trafficID);
     }
   } else {
-    for (let link of linkArray) {
-      console.log('link', link + '/setCookies/cookie1.php');
-      request.get({
-        'url': link + '/setCookies/cookie1.php'
-      }, (err, response) => {
-        if (err || response !== 302) console.log(err);
-      })
-    }
+    getParallel(req, res, ip, link, trafficID, firstUrls);
     console.log('pass, first visit');
     console.log(req.cookies);
-    return true;
   }
 }
 
@@ -60,21 +60,22 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
     proxy.proxySafe(req, res, trafficID);
 
   else if (typeof link.type === 'undefined' || link.type === 1) {
-    let linkArray = [];
+    let firstUrls, secondUrls = [];
     Link.find({}, (err, links) => {
       if (err || !links) return err;
       else {
         for (let link of links) {
           let safeLink = url.parse(link.link_safe);
-          linkArray.push(safeLink.protocol + '//' + safeLink.hostname);
+          let mainUrl = safeLink.protocol + '//' + safeLink.hostname + '/setCookies/';
+          firstUrls.push(mainUrl + 'cookie1.php');
+          secondUrls.push(mainUrl + 'cookie2.php');
         }
-        let existCookie = checkCookie(req, linkArray);
-        console.log('existCookie', existCookie);
-        if (existCookie) {
-          proxy.proxyPresalePage(req, res, ip, link, trafficID);
-        } else {
-          proxy.proxySafe(req, res, trafficID);
-        }
+        checkCookie(req, firstUrls, secondUrls);
+        // if (existCookie) {
+        //   proxy.proxyPresalePage(req, res, ip, link, trafficID);
+        // } else {
+        //   proxy.proxySafe(req, res, trafficID);
+        // }
       }
     })
   }
