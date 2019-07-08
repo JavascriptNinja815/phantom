@@ -21,7 +21,10 @@ let Link = mongoose.model("Link");
 
 function requestAsync(url) {
   return new Promise((resolve, reject) => {
-    request.get(url, (err, response) => {
+    request.get({
+      'url': url,
+      'followRedirect': false
+    }, (err, response) => {
       if (err) return reject(err, response);
       resolve(response);
     });
@@ -37,8 +40,6 @@ async function getParallel(req, res, ip, link, trafficID, urls) {
 }
 
 function checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls) {
-  console.log('first', firstUrls);
-  console.log('second', secondUrls);
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
