@@ -71,12 +71,7 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
           firstUrls.push(mainUrl + 'cookie1.php');
           secondUrls.push(mainUrl + 'cookie2.php');
         }
-        checkCookie(req, firstUrls, secondUrls);
-        // if (existCookie) {
-        //   proxy.proxyPresalePage(req, res, ip, link, trafficID);
-        // } else {
-        //   proxy.proxySafe(req, res, trafficID);
-        // }
+        checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls);
       }
     })
   }
