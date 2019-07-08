@@ -23,7 +23,7 @@ function requestAsync(url) {
   return new Promise((resolve, reject) => {
     request(url, (err, response, body) => {
       if (err) return reject(err, response, body);
-      resolve(JSON.parse(body));
+      resolve(response);
     });
   });
 }
