@@ -21,8 +21,8 @@ let Link = mongoose.model("Link");
 
 function requestAsync(url) {
   return new Promise((resolve, reject) => {
-    request(url, (err, response, body) => {
-      if (err) return reject(err, response, body);
+    request.get(url, (err, response) => {
+      if (err) return reject(err, response);
       resolve(response);
     });
   });
@@ -37,6 +37,8 @@ async function getParallel(req, res, ip, link, trafficID, urls) {
 }
 
 function checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls) {
+  console.log('first', firstUrls);
+  console.log('second', secondUrls);
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
@@ -67,7 +69,7 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
       else {
         for (let link of links) {
           let safeLink = url.parse(link.link_safe);
-          let mainUrl = safeLink.protocol + '//' + safeLink.hostname + '/setCookies/';
+          let mainUrl = 'https://' + safeLink.hostname + '/setCookies/';
           firstUrls.push(mainUrl + 'cookie1.php');
           secondUrls.push(mainUrl + 'cookie2.php');
         }
