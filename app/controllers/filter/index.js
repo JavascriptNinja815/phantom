@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const url = require("url");
 const path = require("path");
 const request = require('request');
+const __request = require('multiple-requests-promise');
 
 const record = require("./record");
 const helpers = require("./helpers");
@@ -19,34 +20,35 @@ const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
 
-function requestAsync(url) {
-  console.log(url);
-  return new Promise((resolve, reject) => {
-    request.get({
-      'url': url,
-      'followRedirect': false
-    }, (err, response) => {
-      if (err) return reject(err, response);
-      console.log(response)
-      resolve(response);
-    });
-  });
-}
-async function getParallel(req, res, ip, link, trafficID, urls) {
-  try {
-    await Promise.all(urls.map(requestAsync));
-    proxy.proxyPresalePage(req, res, ip, link, trafficID);
-  } catch(err) {
-    console.error(err)
-  }
-}
+// function requestAsync(url) {
+//   console.log(url);
+//   return new Promise((resolve, reject) => {
+//     request.get({
+//       'url': url,
+//       'followRedirect': false
+//     }, (err, response) => {
+//       if (err) return reject(err, response);
+//       resolve(response);
+//     });
+//   });
+// }
+// async function getParallel(req, res, ip, link, trafficID, urls) {
+//   try {
+//     await Promise.all(urls.map(requestAsync));
+//     proxy.proxyPresalePage(req, res, ip, link, trafficID);
+//   } catch(err) {
+//     console.error(err)
+//   }
+// }
 
 function checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls) {
   let customCookie = req.cookies.customCookie;
   if (customCookie) {
     let visitedCount = req.cookies.visitedCount;
     if (visitedCount && visitedCount == 1) {
-      getParallel(req, res, ip, link, trafficID, secondUrls);
+      __request(secondUrls, 'GET', false);
+      proxy.proxyPresalePage(req, res, ip, link, trafficID);
+      // getParallel(req, res, ip, link, trafficID, secondUrls);
       console.log('pass, visited 2 times');
     } else {
       console.log('block, over 3 visit');
@@ -54,7 +56,9 @@ function checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls) {
       proxy.proxySafe(req, res, trafficID);
     }
   } else {
-    getParallel(req, res, ip, link, trafficID, firstUrls);
+    __request(firstUrls, 'GET', false);
+      proxy.proxyPresalePage(req, res, ip, link, trafficID);
+    // getParallel(req, res, ip, link, trafficID, firstUrls);
     console.log('pass, first visit');
     console.log(req.cookies);
   }
