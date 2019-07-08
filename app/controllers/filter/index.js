@@ -60,7 +60,8 @@ function handleLinkPassedFilter(req, res, ip, link, trafficID) {
     proxy.proxySafe(req, res, trafficID);
 
   else if (typeof link.type === 'undefined' || link.type === 1) {
-    let firstUrls, secondUrls = [];
+    let firstUrls = [];
+    let secondUrls = [];
     Link.find({}, (err, links) => {
       if (err || !links) return err;
       else {
