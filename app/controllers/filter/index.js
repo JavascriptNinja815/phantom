@@ -20,12 +20,14 @@ const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 let Link = mongoose.model("Link");
 
 function requestAsync(url) {
+  console.log(url);
   return new Promise((resolve, reject) => {
     request.get({
       'url': url,
       'followRedirect': false
     }, (err, response) => {
       if (err) return reject(err, response);
+      console.log(response)
       resolve(response);
     });
   });
