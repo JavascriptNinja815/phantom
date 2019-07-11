@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const url = require("url");
 const path = require("path");
 const request = require('request');
-const __request = require('multiple-requests-promise');
 
 const record = require("./record");
 const helpers = require("./helpers");
@@ -19,70 +18,44 @@ const mailGun = require('mailgun').Mailgun;
 const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
-
-// function requestAsync(url) {
-//   console.log(url);
-//   return new Promise((resolve, reject) => {
-//     request.get({
-//       'url': url,
-//       'followRedirect': false
-//     }, (err, response) => {
-//       if (err) return reject(err, response);
-//       resolve(response);
-//     });
-//   });
+// let cookieList = {
+//   cookie1: `http://${config.LOGINURL}/admin/cookie1`,
+//   cookie2: `http://${config.LOGINURL}/admin/cookie2`
 // }
-// async function getParallel(req, res, ip, link, trafficID, urls) {
-//   try {
-//     await Promise.all(urls.map(requestAsync));
-//     proxy.proxyPresalePage(req, res, ip, link, trafficID);
-//   } catch(err) {
-//     console.error(err)
+// let cookieList = {
+//   cookie1: 'http://wh.phantom.cool/admin/cookie1',
+//   cookie2: 'http://wh.phantom.cool/admin/cookie2'
+// }
+// function checkCookie(req, link) {
+//   let customCookie = req.cookies.customCookie;
+//   if (customCookie) {
+//     let visitedCount = req.cookies.visitedCount;
+//     if (visitedCount && visitedCount == 1) {
+//       // res.redirect(cookieList.cookie2);
+//       console.log('pass, visited 2 times');
+//       return true;
+//     } else {
+//       console.log('block, over 3 visit');
+//       console.log(req.cookies);
+//       return false;
+//     }
+//   } else {
+//     // res.redirect(cookieList.cookie1);
+//     console.log('pass, first visit');
+//     console.log(req.cookies);
+//     return true;
 //   }
 // }
-
-function checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls) {
-  let customCookie = req.cookies.customCookie;
-  if (customCookie) {
-    let visitedCount = req.cookies.visitedCount;
-    if (visitedCount && visitedCount == 1) {
-      __request(secondUrls, 'GET', false);
-      proxy.proxyPresalePage(req, res, ip, link, trafficID);
-      // getParallel(req, res, ip, link, trafficID, secondUrls);
-      console.log('pass, visited 2 times');
-    } else {
-      console.log('block, over 3 visit');
-      console.log(req.cookies);
-      proxy.proxySafe(req, res, trafficID);
-    }
-  } else {
-    __request(firstUrls, 'GET', false);
-      proxy.proxyPresalePage(req, res, ip, link, trafficID);
-    // getParallel(req, res, ip, link, trafficID, firstUrls);
-    console.log('pass, first visit');
-    console.log(req.cookies);
-  }
-}
 
 function handleLinkPassedFilter(req, res, ip, link, trafficID) {
   if (link.type === 0 || !link.link_voluum)
     proxy.proxySafe(req, res, trafficID);
 
   else if (typeof link.type === 'undefined' || link.type === 1) {
-    let firstUrls = [];
-    let secondUrls = [];
-    Link.find({}, (err, links) => {
-      if (err || !links) return err;
-      else {
-        for (let link of links) {
-          let safeLink = url.parse(link.link_safe);
-          let mainUrl = 'https://' + safeLink.hostname + '/setCookies/';
-          firstUrls.push(mainUrl + 'cookie1.php');
-          secondUrls.push(mainUrl + 'cookie2.php');
-        }
-        checkCookie(req, res, ip, link, trafficID, firstUrls, secondUrls);
-      }
-    })
+    // let existCookie = checkCookie(req, link);
+    // if (existCookie) proxy.proxyPresalePage(req, res, ip, link, trafficID);
+    // else proxy.proxySafe(req, res, trafficID);
+    proxy.proxyPresalePage(req, res, ip, link, trafficID);
   }
 
   else if (link.type === 2)
