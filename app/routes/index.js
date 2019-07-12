@@ -22,7 +22,7 @@ const logger = require("../log");
 
 module.exports = function (app) {
   
-  app.get('/api/link-traffics/trends',    auth.ensureHost, auth.loggedIn, trends.getLinkTrafficTrends);
+  app.get('/api/conversion-traffics',    auth.ensureHost, auth.loggedIn, trends.getConversionTraffics);
 
   app.get("/api/traffic/referers",        auth.ensureHost, auth.loggedIn, traffics.getReferers);
 

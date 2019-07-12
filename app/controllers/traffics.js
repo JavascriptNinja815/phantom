@@ -155,6 +155,7 @@ function getBaseQuery(req) {
 }
 
 function getLinkResult(res, format, err, results) {
+  console.log('result', results);
   if (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -318,11 +319,9 @@ function getTraffics(req, res, model, searchFunc) {
     query = search;
 
   async.parallel({
-
     "total": cb => {
       model.count(query, cb);
     },
-    
     "traffics": cb => {
       let cursor = model
         .find(query)

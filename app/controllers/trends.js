@@ -1,217 +1,159 @@
+const async = require("async");
+const useragent = require("useragent");
+const helpers = require("./helpers.js");
+const url = require("url");
+
 const mongoose = require('mongoose');
-const moment = require('moment');
-const async = require('async');
-const _ = require('lodash');
+const ConversionTraffic = mongoose.model('Traffic-Offer');
 
-let TrafficGeneral = mongoose.model('Traffic-General');
-let TrafficLink    = mongoose.model('Traffic-Link');
-let TrafficOffer   = mongoose.model('Traffic-Offer');
-let Link = mongoose.model('Link');
+function parseUserAgent(userAgent) {
+  let agent = useragent.parse(userAgent);
 
-/*
-  Traffic Analyzer:
-    All Traffic
-      rows groups:
-        aso, isp, org, type, location, user_agent
+  if (userAgent && userAgent.includes('outbrain')) 
+    return { 'browser': 'Outbrain Bot' }
 
-      columns:
-        - link hits, non-link hits, total hits, 
-          - link hit %, presale landing %
-        - presale page hits, filter fail, pass %
-        - offer page clicks, non-clicks, click %
-        - sales, missed sales, sale %
-        - revenue, expenditure, net income
-          - per person
+  let browser_family = agent.family || "";
 
-    Link Traffic
-      row groups:
-        aso, isp, org, type, location, user_agent
-         network, angle, owner, link_generated
-        
-         Profile + Profit / Person
-         Revenue + Revenue / Person
-         Sales + Sales / Person,
-         Expenditure + Expenditure / Person,
-         Conversions + Conversion %, 
-         Offer Hits + Offer %, 
-         Landing Hits + Filter Pass %,
-         Total Hits
+  if (browser_family.includes("UIWebView")) 
+    browser_family = browser_family.replace("Mobile Safari ", "");
 
-    Date Range
-        "presaleHits": 24,
-    "expenditureEnabled": 0,
-    "expenditureDisabled": 0,
-    "linkHitsEnabled": 24,
-    "linkHitsDisabled": 24,
-    "offerPageHits": 2,
-    "conversions": 2,
-    "revenue": 0,
-    "linkHits": 48,
-    "expenditure": 0,
-    "profit": 0,
-    "profitPerPerson": 0,
-    "revenuePerPerson": 0,
-    "expenditurePerPerson": 0,
-    "profitEnabled": 0,
-    "profitPerPersonEnabled": 0,
-    "expenditurePerPersonEnabled": 0,
-    "conversionPercent": 1,
-    "offerClickPercent": 0.08333333333333333,
-    "filterPassPercent": 1
-*/
+  browser_family = browser_family.replace('Safari UI/WKWebView', 'WKWebView')
+  browser_family = browser_family.replace(/(Mobile)|(Internet)/g, "").trim();
 
-async function groupOffer(match, group, cb) {
-  return await TrafficOffer.aggregate([
-    match,
-    { 
-      '$project': { 
-        [group]: '$'+group,
-        'convertedLinkID': { '$cond' : [ "$converted", '$link_id', null ] }
-      }
-    },
-    {
-      '$group': { 
-        '_id': '$'+group, 
-        'offerPageHits': { '$sum': 1 },
-        'convertedLinkIDs': { '$push': "$convertedLinkID" }
-      } 
-    },
-    { $sort: { [group]: -1 } }
-  ], cb);
+  let browser = browser_family;
+  let os = agent.os.family;
+
+  if (parseInt(agent.major, 10)) browser += ' ' + agent.major;
+  if (parseInt(agent.os.major, 10)) os += ' ' + agent.os.major;
+  return { browser, os };
 }
 
-async function groupLinks(match, group, cb) {
-  TrafficLink.aggregate([
-    match,
-    { 
-      '$project': { 
-        '_id': '$link_id',
-        'presaleHit': { '$cond' : [ "$used_real", 1, 0 ] },
-        'enabledLinkID': { '$cond' : [ "$enabled", '$link_id', null ] },
-        'disabledLinkID': { '$cond' : [ "$enabled", null, '$link_id' ] }
-      }
-    },
-    { 
-      '$group': { 
-        '_id': '$'+group,
-        'enabledLinkIDs': { '$push': "$enabledLinkID" },
-        'disabledLinkIDs': { '$push': "$disabledLinkID" },
-        'presaleHits': { '$sum': '$presaleHit' }
-      } 
-    },
-    { $sort: { [group]: -1 } }
-  ], cb);
-}
+function getBaseQuery(req) {
+  var {
+    start,
+    from,
+    to
+  } = req.query;
+  var base = {};
 
-function divide(a, b) {
-  return (a && b) ? Math.round((a/b) * 10000) / 100 : 0
-}
-
-/*
-Profit, Profit / Person
-Revenue, Revenue / Person
-Expenditure, Expenditure / Person,
-Conversions + Conversion %, 
-Offer Hits + Offer Click %, 
-Presale Hits + Filter Pass %,
-Link Hits
-*/
-function computeFields(traffic) {
-  traffic.map(t => {
-    t.linkHits = t.linkHitsEnabled + t.linkHitsDisabled;
-    t.expenditure = t.expenditureEnabled + t.expenditureDisabled;
-
-    t.profit = t.revenue - t.expenditure;
-    t.profitEnabled = t.profit - t.expenditureEnabled;
-
-    t.profitPerPerson = divide(t.profit, t.linkHits)
-    t.revenuePerPerson = divide(t.revenue, t.linkHits)
-    t.expenditurePerPerson = divide(t.expenditure, t.linkHits)
-
-    t.profitPerPersonEnabled = divide(t.profit, t.linkHitsEnabled)
-    t.revenuePerPersonEnabled = divide(t.revenue, t.linkHitsEnabled)
-    t.expenditurePerPersonEnabled = divide(t.expenditure, t.linkHitsEnabled)
-    t.filterPassPercent = divide(t.presaleHits, t.linkHitsEnabled)
-    
-    t.conversionPercent = divide(t.conversions, t.offerPageHits)
-
-    t.offerClickPercent = divide(t.offerPageHits, t.presaleHits)
-  });
-
-  return traffic;
-}
-
-function combineTraffic(links, linkTraffic, offerTraffic) {
-  let linkMap = {};
-
-  for (let l of links)
-    linkMap[l._id] = _.pick(l, '_id', 'cpc', 'payout');
-
-  let group = {};
-  let traffic = [];
-
-  for (let l of linkTraffic) {
-    let expenditureEnabled = l.enabledLinkIDs
-      .reduce((acc, val) => {
-        return acc + (linkMap[val] ? linkMap[val].cpc : 0)
-      }, 0);
-
-    let expenditureDisabled = l.disabledLinkIDs
-      .reduce((acc, val) => {
-        return acc + (linkMap[val] ? linkMap[val].cpc : 0)
-      }, 0);
-      
-    group[l._id] = {
-      'id': l._id,
-      'presaleHits': l.presaleHits,
-      expenditureEnabled,
-      expenditureDisabled,
-      'linkHitsEnabled': l.enabledLinkIDs.length,
-      'linkHitsDisabled': l.disabledLinkIDs.length,
+  if (start) {
+    base.access_time = {
+      "$lte": new Date(parseInt(start))
     };
   }
 
-  for (let l of offerTraffic) {
-    group[l._id].offerPageHits = l.offerPageHits;
-    group[l._id].conversions = l.convertedLinkIDs.length
-    group[l._id].revenue = l.convertedLinkIDs.reduce((acc, val) => {
-      return acc + (linkMap[val] ? linkMap[val].payout : 0)
-    }, 0);
+  if (!start && (from || to)) {
+    base.access_time = {};
+
+    if (from)
+      base.access_time["$gte"] = new Date(parseInt(from));
+
+    if (to)
+      base.access_time["$lte"] = new Date(parseInt(to));
   }
 
-  for (let k of Object.keys(group))
-    traffic.push(group[k])
 
-  return traffic;
+  if (req.query.country)
+    base['connection.location'] = new RegExp(req.query.country);
+
+  base.converted = {
+    "$eq": true
+  }
+
+  return base;
 }
+function formatTrafficRecord(t) {
+  let parsed = url.parse('http://'+t.url);
+  let originalUrl = parsed.pathname;
 
-function getLinkTrafficTrends(req, res) {
-  let group = req.query.group || 'connection.aso';
+  if (t.url_query)
+    originalUrl += '?' + t.url_query;
 
-  let match = { '$match': {} };// Date Range
+  let short_location = (t.connection.location || '').trim();
+  short_location = short_location.replace(/(, United States|\d)/, "");
 
-  
+  let hostnames = (t.connection.hostnames || '')
 
-  async.parallel({
-    'groupLinks': cb => groupLinks(match, group, cb),
-    'groupOffer': cb => groupOffer(match, group, cb),
-    'links': cb => Link.find().exec(cb)
-  }, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.sendStatus(500);
-    }
+  let hostnameRegExs = ['\\d', '\\.{2,}', '-{2,}' , '-\\.', '^\\.']
 
-    let traffic = combineTraffic(results.links, results.groupLinks, results.groupOffer);
-    traffic = computeFields(traffic);
-    traffic.sort((a, b) => a.profit - b.profit);
-
-    
-    res.json(traffic);
+  hostnameRegExs.map(regEx => {
+    hostnames = hostnames.replace(new RegExp(regEx, 'g'), '')
   })
 
+  let extra = Object.assign({
+    'url_domain': parsed.hostname.replace('www.', ''),
+    'url_path': originalUrl,
+    'numHostnames': hostnames ? hostnames.split(',').length : 0,
+    short_location,
+    hostnames
+  }, parseUserAgent(t.headers['user-agent']));
+
+  if (t.link_generated) {
+    extra.keywords = helpers.getUTMKeyWords(t.link_generated);
+    extra.short_generated = helpers.parseGenerated(t.link_generated);
+  }
+
+  let referer = url.parse(t.headers.referer || '').hostname || '';
+
+  extra.domain_referer = referer ? referer.replace("www.", "") : '';
+
+  return Object.assign({}, t._doc, extra || {});
 }
 
-module.exports = {
-  getLinkTrafficTrends
+
+function getConversionResult(res, err, results) {
+  if (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+  var traffics = [];
+
+  results.traffics.on("data", t => {
+    traffics.push(formatTrafficRecord(t))
+  });
+
+
+  results.traffics.on("end", () => {
+    res.json({
+      "traffics": traffics,
+      "total": results.total || 0
+    });
+  });
 }
+function getTraffics(req, res, model) {
+  let { limit } = req.query;
+  limit = limit ? parseInt(limit) : 10;
+
+  let query = {};
+  let base = getBaseQuery(req);
+  let hasBase = Object.keys(base).length;
+
+  if (hasBase) {
+    query = base;
+  }
+
+  async.parallel({
+    "total": cb => {
+      model.count(query, cb);
+    },
+    "traffics": cb => {
+      let cursor = model
+        .find(query)
+        .sort("-access_time")
+        .batchSize(Math.min(20000, limit))
+        .limit(limit)
+        .cursor();
+
+        cb(null, cursor);
+    }
+
+  }, (err, results) => {
+    getConversionResult(res, err, results)
+  });
+}
+function getConversionTraffics(req, res) {
+  getTraffics(req, res, ConversionTraffic);
+}
+module.exports = {
+  getConversionTraffics
+};

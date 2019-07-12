@@ -29,8 +29,8 @@
       return req;
     }
 
-    this.getReport = function(callback) {
-      $http.get('/api/link-traffics/trends')
+    this.getReport = function(data, callback) {
+      $http.get(buildURL('conversion', data))
           .then(res => callback(res.data))
           .catch(res => AuthenticationService.checkAuth(res));
     };
