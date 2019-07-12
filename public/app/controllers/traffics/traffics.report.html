@@ -24,10 +24,11 @@
             <div class='divider divider-md' style="height: 1px;margin: 10px 0;"></div>
             <div class="row">
               <div class="col-md-5">
-                <!-- filter here -->  
+                <!-- filter here -->
               </div>
               <div class="col-md-3 col-xs-2">
-                <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40" ng-show='searchUpdating'></md-progress-circular>
+                <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40"
+                  ng-show='searchUpdating'></md-progress-circular>
               </div>
             </div>
           </div>
@@ -35,66 +36,89 @@
             <table class="table cl-table-with-buttons">
               <thead>
                 <tr>
-                  <th><div style="width:250px;">ID</div></th>
-
-                  <th><div style="min-width:100px;text-align:right;">Profit</div></th>
-                  <th><div style="min-width:100px;text-align:right;">Revenue</div></th>
-                  <th><div style="min-width:100px;text-align:right;">Expenditure</div></th>
-
-                  <th><div style="min-width:100px;text-align:right;">Link Enabled Profit</div></th>
-
-                  <th><div style="min-width:100px;text-align:right;">Link Paused Expenditure</div></th>
-
-                  <th><div style="min-width:100px;text-align:right;">Conversions</div></th>
-                  <th><div style="min-width:100px;text-align:right;">Offer Clicks</div></th>
-                  <th><div style="min-width:100px;text-align:right;">Presale Hits</div></th>
-                  <th><div style="min-width:100px;text-align:right;">Link Paused Hits</div></th>
-                  <th><div style="min-width:100px;text-align:right;">Total Hits</div></th>
+                  <th class='with-checkbox'>
+                    <md-checkbox ng-model="headerCheckbox" ng-change="toggleAllCheckboxes()" aria-label="Select">
+                    </md-checkbox>
+                  </th>
+                  <th>
+                    <div class="th">IP Address</div>
+                  </th>
+                  <th>
+                    <div class="th">Converted?</div>
+                  </th>
+                  <th>
+                    <div class="th" style="width:100px">Geolocation</div>
+                  </th>
+                  <th>
+                    <div class="th">Accessed Time</div>
+                  </th>
+                  <th>
+                    <div class="th">ASO</div>
+                  </th>
+                  <th>
+                    <div class="th">Organization</div>
+                  </th>
+                  <th>
+                    <div class="th">ISP</div>
+                  </th>
+                  <th>
+                    <div class="th">Connection Type</div>
+                  </th>
+                  <th>
+                    <div class="th">Proxy</div>
+                  </th>
+                  <th>
+                    <div class="th">Hostnames</div>
+                  </th>
+                  <th>
+                    <div class="th">Browser</div>
+                  </th>
+                  <th>
+                    <div class="th">OS</div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr data-ng-repeat="traffic in traffics">
-                  <td>{{traffic.id}}</td>
-
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.profit}}</span> 
-                    <span class="per-person">({{traffic.profitPerPerson}})</span>
+                <tr data-ng-repeat="traffic in traffics" ng-class="{isBot: traffic.isBot}">
+                  <td class='with-checkbox'>
+                    <md-checkbox ng-model="traffic['selected']" aria-label="Select"></md-checkbox>
                   </td>
-                  
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.revenue}}</span> 
-                    <span class="per-person">({{traffic.revenuePerPerson}})</span>
-                  </td>
+                  <td>
+                    <div ngclipboard data-clipboard-text="{{traffic.ip}}" ngclipboard-success="onSuccess(e);"
+                      style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 110px;cursor:pointer;height: 20px;">
+                      {{traffic.ip}}
+                    </div>
+                    <div style="display:none">Copied</div>
 
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.expenditure}}</span> 
-                    <span class="per-person">({{traffic.expenditurePerPerson}})</span>
+                    <md-tooltip md-delay="0">
+                      {{traffic.ip}}
+                    </md-tooltip>
                   </td>
-
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.profitEnabled}}</span> 
-                    <span class="per-person">({{traffic.profitPerPersonEnabled}})</span>
+                  <td style="text-align:center">
+                    <span class="logo-icon zmdi zmdi-{{traffic.icon}}"></span>
                   </td>
+                  <td>
+                    <div>
+                      <div ngclipboard data-clipboard-text="{{traffic.short_location}}"
+                        ngclipboard-success="onSuccess(e);" style="cursor:pointer">
+                        {{traffic.short_location}}
+                      </div>
+                      <div style="display:none">Copied</div>
 
-                  <td style="text-align:right">{{traffic.expenditureDisabled}}</td>
-
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.conversions}}</span> 
-                    <span class="percent">({{traffic.conversionPercent}}%)</span>
+                      <md-tooltip md-delay="0">
+                        {{traffic.connection.location}}
+                      </md-tooltip>
+                    </div>
                   </td>
-
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.offerPageHits}}</span> 
-                    <span class="percent">({{traffic.offerClickPercent}}%)</span>
-                  </td>
-
-                  <td style="text-align:right">
-                    <span class="main">{{traffic.presaleHits}}</span> 
-                    <span class="percent">({{traffic.filterPassPercent}}%)</span>
-                  </td>
-                  
-                  <td style="text-align:right">{{traffic.linkHitsDisabled}}</td>
-                  <td style="text-align:right">{{traffic.linkHits}}</td>
+                  <td><span ng-bind="traffic.access_time | date:'MMM d h:mm a'"></span></td>
+                  <td>{{traffic.connection.aso}}</td>
+                  <td>{{traffic.connection.org}}</td>
+                  <td>{{traffic.connection.isp}}</td>
+                  <td>{{traffic.connection.type}}</td>
+                  <td>{{traffic.connection.proxy}}</td>
+                  <td>{{traffic.connection.hostnames}}</td>
+                  <td>{{traffic.browser}}</td>
+                  <td>{{traffic.os}}</td>
                 </tr>
               </tbody>
             </table>

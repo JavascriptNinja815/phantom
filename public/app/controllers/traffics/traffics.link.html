@@ -9,13 +9,15 @@
           <div class="table-filters">
             <div class="row">
               <div class="col-sm-6 col-xs-12 text-left">
-                <md-button class="md-raised btn-w-lg md-primary" data-ng-click="addToBlacklist()" ng-disabled="!selectedItemExists()">
+                <md-button class="md-raised btn-w-lg md-primary" data-ng-click="addToBlacklist()"
+                  ng-disabled="!selectedItemExists()">
                   Add To Blacklist
                 </md-button>
                 <md-button class="md-raised btn-w-lg md-primary" data-ng-click="export()" style="margin-left: 20px;">
                   Export
                 </md-button>
-                <md-button class="md-raised btn-w-lg md-primary" data-ng-click="reload()" style="margin-left: 20px;">Refresh</md-button>
+                <md-button class="md-raised btn-w-lg md-primary" data-ng-click="reload()" style="margin-left: 20px;">
+                  Refresh</md-button>
               </div>
             </div>
             <div class='divider divider-md' style="height: 1px;margin: 15px 0;"></div>
@@ -27,18 +29,16 @@
                 <md-datepicker ng-model="toDate" md-placeholder="To date"></md-datepicker>
               </div>
               <div class="col-md-2 col-xs-10" style="width: 100px">
-                <md-button class="md-raised btn-w-lg md-primary" ng-disabled="!dateSelected()" data-ng-click="date()" style="margin-left: 20px;width: 100px;min-width: 0;">
+                <md-button class="md-raised btn-w-lg md-primary" ng-disabled="!dateSelected()" data-ng-click="date()"
+                  style="margin-left: 20px;width: 100px;min-width: 0;">
                   Go
                 </md-button>
               </div>
             </div>
             <div class='divider divider-md' style="height: 1px;margin: 15px 0;"></div>
             <div class="row">
-              <tags-input ng-model="links" 
-                          add-from-autocomplete-only="true"
-                          placeholder="Search by safe link"
-                          on-tag-added=addLink()
-                          on-tag-removed=firstPage()>
+              <tags-input ng-model="links" add-from-autocomplete-only="true" placeholder="Search by safe link"
+                on-tag-added=addLink() on-tag-removed=firstPage()>
                 <auto-complete source="loadTags($query)" min-length="1" highlightMatchedText="false"></auto-complete>
               </tags-input>
             </div>
@@ -46,22 +46,20 @@
             <div class="row">
               <div class="col-md-3 col-xs-10" ng-show="admin" ng-cloak>
                 <span class="ui-select" style="display: block">
-                  <select data-ng-model="ownerFilter" data-ng-model-options='{ debounce: 1000 }' data-ng-change="ownerFilterChange()">
+                  <select data-ng-model="ownerFilter" data-ng-model-options='{ debounce: 1000 }'
+                    data-ng-change="ownerFilterChange()">
                     <option value="">All</option>
                     <option data-ng-repeat="user in users" value="{{user}}">{{user}}</option>
                   </select>
                 </span>
               </div>
               <div class="col-md-3 col-xs-10">
-	                <input type="text"
-	                     placeholder="Search IP/Referer..."
-	                     class="form-control"
-	                     data-ng-model="searchReferer"
-	                     data-ng-model-options='{ debounce: 1000 }'
-	                     data-ng-change="searchKeywordChange()">
-		          </div>
+                <input type="text" placeholder="Search IP/Referer..." class="form-control" data-ng-model="searchReferer"
+                  data-ng-model-options='{ debounce: 1000 }' data-ng-change="searchKeywordChange()">
+              </div>
               <div class="col-md-3 col-xs-2">
-                <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40" ng-show='searchUpdating'></md-progress-circular>
+                <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40"
+                  ng-show='searchUpdating'></md-progress-circular>
               </div>
             </div>
           </div>
@@ -70,7 +68,8 @@
               <thead>
                 <tr>
                   <th class='with-checkbox'>
-                    <md-checkbox ng-model="headerCheckbox" ng-change="toggleAllCheckboxes()" aria-label="Select"></md-checkbox>
+                    <md-checkbox ng-model="headerCheckbox" ng-change="toggleAllCheckboxes()" aria-label="Select">
+                    </md-checkbox>
                   </th>
                   <th>
                     <div class="th">IP Address</div>
@@ -128,7 +127,8 @@
                     <md-checkbox ng-model="traffic['selected']" aria-label="Select"></md-checkbox>
                   </td>
                   <td>
-                    <div ngclipboard data-clipboard-text="{{traffic.ip}}" ngclipboard-success="onSuccess(e);" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 110px;cursor:pointer;height: 20px;">
+                    <div ngclipboard data-clipboard-text="{{traffic.ip}}" ngclipboard-success="onSuccess(e);"
+                      style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 110px;cursor:pointer;height: 20px;">
                       {{traffic.ip}}
                     </div>
                     <div style="display:none">Copied</div>
@@ -139,7 +139,9 @@
                   </td>
                   <td>
                     <div>
-                      <div ngclipboard data-clipboard-text="{{traffic.link_generated}}" ngclipboard-success="onSuccess(e);" style="cursor:pointer; width: 250px;word-break: break-word;">
+                      <div ngclipboard data-clipboard-text="{{traffic.link_generated}}"
+                        ngclipboard-success="onSuccess(e);"
+                        style="cursor:pointer; width: 250px;word-break: break-word;">
                         <div class="ellipsis" style="max-width: 275px;">
                           {{traffic.short_generated}}
                         </div>
@@ -158,7 +160,8 @@
                   </td>
                   <td>
                     <div>
-                      <div ngclipboard data-clipboard-text="{{traffic.short_location}}" ngclipboard-success="onSuccess(e);" style="cursor:pointer">
+                      <div ngclipboard data-clipboard-text="{{traffic.short_location}}"
+                        ngclipboard-success="onSuccess(e);" style="cursor:pointer">
                         {{traffic.short_location}}
                       </div>
                       <div style="display:none">Copied</div>
@@ -179,7 +182,8 @@
                   <td>{{traffic.os}}</td>
                   <td>
                     <div>
-                      <div ngclipboard data-clipboard-text="{{traffic.referer}}" ngclipboard-success="onSuccess(e);" style="cursor:pointer">
+                      <div ngclipboard data-clipboard-text="{{traffic.referer}}" ngclipboard-success="onSuccess(e);"
+                        style="cursor:pointer">
                         {{traffic.domain_referer}}
                       </div>
                       <div style="display:none">Copied</div>
@@ -190,8 +194,9 @@
                     </div>
                   </td>
                   <td class='with-button'>
-                    <a href='/api/link-traffics/{{traffic._id}}' target="_blank" class="md-icon-button md-primary" aria-label="View Details" tooltip-placement="top"
-                      uib-tooltip="Edit" tooltip-append-to-body="true">
+                    <a href='/api/link-traffics/{{traffic._id}}' target="_blank" class="md-icon-button md-primary"
+                      aria-label="View Details" tooltip-placement="top" uib-tooltip="Edit"
+                      tooltip-append-to-body="true">
                       <span class="logo-icon zmdi zmdi-view-dashboard"></span>
                     </a>
                   </td>
@@ -205,24 +210,25 @@
           <div class="row">
             <div class="col-md-6 page-num-info">
               <span>
-              Show 
-              <select data-ng-model="numPerPage"
-                data-ng-options="num for num in numPerPageOpt"
-                data-ng-change="onNumPerPageChange()">
-              </select> 
-              entries per page
+                Show
+                <select data-ng-model="numPerPage" data-ng-options="num for num in numPerPageOpt"
+                  data-ng-change="onNumPerPageChange()">
+                </select>
+                entries per page
               </span>
             </div>
             <div class="col-md-6 page-num-info"></div>
             <div class="col-md-6 text-right pagination-container">
-              <ul class="pagination-sm pagination ng-isolate-scope ng-valid" ng-model="currentPage" boundary-links="true" aria-invalid="false">
+              <ul class="pagination-sm pagination ng-isolate-scope ng-valid" ng-model="currentPage"
+                boundary-links="true" aria-invalid="false">
                 <li ng-disabled="!hasPrev()" class="pagination-first ng-scope">
                   <a href="" ng-click="firstPage()" class="ng-binding">First</a>
                 </li>
                 <li ng-disabled="!hasPrev()" class="pagination-first ng-scope">
                   <a href="" ng-click="prevPage()" class="ng-binding">Prev</a>
                 </li>
-                <li class="pagination-last ng-scope" style="padding: 5px 8px;font-size: 12px;line-height: 20px;position: relative;float: left;margin-left: 10px;">
+                <li class="pagination-last ng-scope"
+                  style="padding: 5px 8px;font-size: 12px;line-height: 20px;position: relative;float: left;margin-left: 10px;">
                   Page {{page()}}
                 </li>
                 <li ng-disabled="!hasNext()" class="pagination-last ng-scope" style="">
