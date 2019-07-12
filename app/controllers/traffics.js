@@ -155,7 +155,6 @@ function getBaseQuery(req) {
 }
 
 function getLinkResult(res, format, err, results) {
-  console.log('result', results);
   if (err) {
     console.error(err);
     return res.sendStatus(500);
