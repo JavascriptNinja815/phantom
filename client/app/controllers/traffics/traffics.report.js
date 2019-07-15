@@ -64,6 +64,9 @@
         }, 2000);
       },
 
+      export: () => {
+        Traffics.exportReport(buildQuery());
+      },
       reload: () => refresh()
     });
 

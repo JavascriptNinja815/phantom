@@ -1,4 +1,6 @@
 const async = require("async");
+const moment = require("moment");
+const json2csv = require("json2csv");
 const useragent = require("useragent");
 const helpers = require("./helpers.js");
 const url = require("url");
@@ -29,14 +31,10 @@ function parseUserAgent(userAgent) {
 }
 
 function getBaseQuery(req) {
-  var {
-    start,
-    from,
-    to
-  } = req.query;
+  var { start, from, to, format } = req.query;
   var base = {};
 
-  if (start) {
+  if (start && format !== 'csv') {
     base.access_time = {
       "$lte": new Date(parseInt(start))
     };
@@ -100,8 +98,17 @@ function formatTrafficRecord(t) {
   return Object.assign({}, t._doc, extra || {});
 }
 
+function formatTrafficRecordCSV(t) {
+  delete t._id;
+  t.access_time = moment(t.access_time).format('MM-DD-YYYY h:mm:ss a');
+  t.result = 'Converted';
 
-function getConversionResult(res, err, results) {
+  t.userAgent = parseUserAgent(t.headers['user-agent']);
+
+  return t;
+}
+
+function getConversionResult(res, format, err, results) {
   if (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -109,20 +116,37 @@ function getConversionResult(res, err, results) {
   var traffics = [];
 
   results.traffics.on("data", t => {
+    if (format === 'csv')
+      traffics.push(formatTrafficRecordCSV(t._doc));
+    else
     traffics.push(formatTrafficRecord(t))
   });
 
 
   results.traffics.on("end", () => {
-    res.json({
-      "traffics": traffics,
-      "total": results.total || 0
-    });
+    if (format === "csv") {
+      res.setHeader("Content-disposition", "attachment; filename=conversionTraffic.csv");
+
+      res.write(
+        json2csv({
+          "data": traffics,
+          'flatten': true
+        })
+      );
+      res.end();
+    } else {
+      res.json({
+        "traffics": traffics,
+        "total": results.total || 0
+      });
+    }
   });
 }
 function getTraffics(req, res, model) {
-  let { limit } = req.query;
+  let { limit, format } = req.query;
   limit = limit ? parseInt(limit) : 10;
+
+  if (format === 'csv') limit = 60000;
 
   let query = {};
   let base = getBaseQuery(req);
@@ -148,7 +172,7 @@ function getTraffics(req, res, model) {
     }
 
   }, (err, results) => {
-    getConversionResult(res, err, results)
+    getConversionResult(res, format, err, results)
   });
 }
 function getConversionTraffics(req, res) {

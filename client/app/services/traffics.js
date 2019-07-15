@@ -35,6 +35,10 @@
           .catch(res => AuthenticationService.checkAuth(res));
     };
 
+    this.exportReport = function(data) {
+      window.open(buildURL('conversion', data, true));
+    };
+
     this.getGeneralPage = function(data, callback) {
       $http.get(buildURL('general', data))
           .then(res => callback(res.data))
@@ -54,6 +58,8 @@
     this.exportLinks = function(data) {
       window.open(buildURL('link', data, true));
     };
+
+    
   }
 
 
