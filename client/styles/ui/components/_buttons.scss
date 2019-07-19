@@ -61,10 +61,6 @@
     }
 }
 
-
-
-
-
 // add to default button
 .btn-info-alt {
     @include button-variant($btn-info-alt-color, $btn-info-alt-bg, $btn-info-alt-border);
@@ -100,7 +96,10 @@
 .btn-w-xs { min-width: 80px; }
 .btn-w-sm { min-width: 100px; }
 .btn-w-md { min-width: 135px; }
-.btn-w-lg { min-width: 160px; }
+.btn-w-lg { 
+  margin: 10px !important;
+  min-width: 160px;
+}
 
 // 
 .btn-round { border-radius: 2em; }

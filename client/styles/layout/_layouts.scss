@@ -1,4 +1,8 @@
-
+@mixin mobile {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
+}
 .layout-boxed {
     > .header-container {
         .top-header {
@@ -49,11 +53,14 @@ html {
                 @media (min-width:$screen-sm) {
                     padding-top: $header_height;
                 }
+                @include mobile {
+                  padding-top: $header_height / 2;
+                }
             }
 
         }
 
-        .top-header {}
+        // .top-header {}
     }
 
     > .main-container {
