@@ -58,9 +58,7 @@
     };
 
     $scope.typeChange = function() {
-      // console.log('Type change: ' + $scope.link.type)
       $scope.voluumShown = $scope.link.type != '0';
-      // console.log('$scope.voluumShown ' + $scope.voluumShown)
     }
 
     Networks.getPage(1, 100, data => {

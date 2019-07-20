@@ -39,6 +39,8 @@ module.exports.checkFilter = (req, link, ip, connection, isOfferPage, usePage, c
 
   if (!isOfferPage) {
     let referer = req.get("referer");
+    console.log('referer', referer);
+    console.log('network', link.network);
     if (link.network === 'Outbrain') {
       if (!referer || !referer.toLowerCase().includes('paid.outbrain.com'))
         return cb(false, trafficRecord);
@@ -47,7 +49,8 @@ module.exports.checkFilter = (req, link, ip, connection, isOfferPage, usePage, c
       if (!referer || !referer.toLowerCase().includes('m.facebook.com')
       || !referer.toLowerCase().includes('facebook.com')
       || !referer.toLowerCase().includes('l.facebook.com')
-      || !referer.toLowerCase().includes('lm.facebook.com'))
+      || !referer.toLowerCase().includes('lm.facebook.com')
+      || !referer.toLowerCase().includes('instagram.com'))
         return cb(false, trafficRecord)
     }
   }
