@@ -4,4 +4,7 @@
 /node_modules/
 /dump.rdb
 /public/
-
+.env
+.env.ax
+.env.gt
+.env.wh
