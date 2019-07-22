@@ -90,7 +90,6 @@
         link_generated = parser.pathname;
         
       var utm_params = [];
-      console.log($scope.query);
       for (let key of Object.keys($scope.query)) {
         if ($scope.query[key]) {
           if ($scope.query[key] == ' ') {
