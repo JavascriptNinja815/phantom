@@ -105,14 +105,14 @@
                 </md-input-container>
 
                 <md-input-container class="md-block">
-                  <label>UTM Term (melissa_mccarthy+election)</label>
-                  <input ng-model="query.utm_term" pattern="^[0-9a-zA-Z_+-]*$" ng-pattern-restrict ng-change="generateLink()">
+                  <label>GDPR_CONSENT</label>
+                  <input ng-model="query.gdpr_consent" pattern="^[ 0-9a-zA-Z_+-]*$" ng-pattern-restrict ng-change="generateLink()">
                   <div class="hint">Identify the paid keywords (optional)</div>
                 </md-input-container>
 
                 <md-input-container class="md-block">
-                  <label>UTM Content (logolink, textlink)</label>
-                  <input ng-model="query.utm_content" pattern="^[0-9a-zA-Z_-]*$" ng-pattern-restrict ng-change="generateLink()">
+                  <label>GDPR</label>
+                  <input ng-model="query.gdpr" pattern="^[0-9a-zA-Z_-]*$" ng-pattern-restrict ng-change="generateLink()">
                   <div class="hint">Use to differentiate ads (optional)</div>
                 </md-input-container>
                 

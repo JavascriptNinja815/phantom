@@ -90,10 +90,15 @@
         link_generated = parser.pathname;
         
       var utm_params = [];
-      
+      console.log($scope.query);
       for (let key of Object.keys($scope.query)) {
-        if ($scope.query[key])
-          utm_params.push(`${key}=${$scope.query[key]}`);
+        if ($scope.query[key]) {
+          if ($scope.query[key] == ' ') {
+            utm_params.push(key + '=');  
+          } else {
+            utm_params.push(`${key}=${$scope.query[key]}`);
+          }
+        }
       }
       
       query += utm_params.join("&");

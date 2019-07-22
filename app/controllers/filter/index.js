@@ -18,43 +18,12 @@ const mailGun = require('mailgun').Mailgun;
 const mg = new mailGun('key-8719679b323b7002580966918223b74e')
 
 let Link = mongoose.model("Link");
-// let cookieList = {
-//   cookie1: `http://${config.LOGINURL}/admin/cookie1`,
-//   cookie2: `http://${config.LOGINURL}/admin/cookie2`
-// }
-// let cookieList = {
-//   cookie1: 'http://wh.phantom.cool/admin/cookie1',
-//   cookie2: 'http://wh.phantom.cool/admin/cookie2'
-// }
-// function checkCookie(req, link) {
-//   let customCookie = req.cookies.customCookie;
-//   if (customCookie) {
-//     let visitedCount = req.cookies.visitedCount;
-//     if (visitedCount && visitedCount == 1) {
-//       // res.redirect(cookieList.cookie2);
-//       console.log('pass, visited 2 times');
-//       return true;
-//     } else {
-//       console.log('block, over 3 visit');
-//       console.log(req.cookies);
-//       return false;
-//     }
-//   } else {
-//     // res.redirect(cookieList.cookie1);
-//     console.log('pass, first visit');
-//     console.log(req.cookies);
-//     return true;
-//   }
-// }
 
 function handleLinkPassedFilter(req, res, ip, link, trafficID) {
   if (link.type === 0 || !link.link_voluum)
     proxy.proxySafe(req, res, trafficID);
 
   else if (typeof link.type === 'undefined' || link.type === 1) {
-    // let existCookie = checkCookie(req, link);
-    // if (existCookie) proxy.proxyPresalePage(req, res, ip, link, trafficID);
-    // else proxy.proxySafe(req, res, trafficID);
     proxy.proxyPresalePage(req, res, ip, link, trafficID);
   }
 
