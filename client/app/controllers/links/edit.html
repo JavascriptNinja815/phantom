@@ -45,15 +45,16 @@
                   <!-- 4/28/19 added by Jin -->
                   <md-checkbox ng-model="link.block_corporate" aria-label="Block Corporate" style="width: 150px;">Block Corporate</md-checkbox>
                   <!-- 8/12/2019 added by Jin -->
-                  <md-checkbox ng-model="" aria-label="ASO Whitelist" style="width: 150px;">ASO Whitelist</md-checkbox>
+                  <md-checkbox aria-label="ASO Whitelist" style="width: 150px;">ASO Whitelist</md-checkbox>
 
                 </div>
 
-                <md-select ng-model="link.type" class="md-block" ng-change="typeChange()" style="width: 420px; margin: 20px 0 30px;">
-                  <!-- <md-option value="0">Placeholder</md-option> -->
-                  <md-option value="1" selected>In Place</md-option>
-                  <md-option value="2">Redirect</md-option>
-                </md-select>
+                <md-input-container style="width: 200px;">
+                  <md-select ng-model="link.type" class="md-block" ng-change="typeChange()">
+                    <md-option value="1" selected>In Place</md-option>
+                    <md-option value="2">Redirect</md-option>
+                  </md-select>
+                </md-input-container>
 
                 <md-input-container class="md-block" ng-show="voluumShown">
                   <label>Voluum Link</label>
