@@ -13,29 +13,29 @@
                 <md-button class="md-raised btn-w-lg md-primary" data-ng-click="gotoCreatePage()">
                   Create New Link
                 </md-button>
-                <md-button class="md-raised btn-w-lg md-primary" data-ng-click="deleteLinks($event, selected)" ng-disabled="checked(selected)">Delete Link(s)</md-button>
+                <md-button class="md-raised btn-w-lg md-primary" data-ng-click="deleteLinks($event, selected)"
+                  ng-disabled="checked(selected)">Delete Link(s)</md-button>
                 <md-button class="md-raised btn-w-lg md-primary" data-ng-click="reload()">Refresh</md-button>
               </div>
             </div>
             <div class='divider divider-md'></div>
             <div class="row">
               <div class="col-md-3 col-xs-10" style="margin-top: 10px;">
-                <input type="text" placeholder="Search..." class="form-control" data-ng-model="searchKeyword" data-ng-model-options='{ debounce: 1000 }'
-                  data-ng-change="searchKeywordChange()">
+                <input type="text" placeholder="Search..." class="form-control" data-ng-model="searchKeyword"
+                  data-ng-model-options='{ debounce: 1000 }' data-ng-change="searchKeywordChange()">
               </div>
               <div class="col-md-3 col-xs-10" style="margin-top: 10px;" ng-show="admin" ng-cloak>
                 <span class="ui-select" style="display: block">
-                    <select
-                      data-ng-model="ownerFilter"
-                      data-ng-model-options='{ debounce: 1000 }'
-                      data-ng-change="ownerFilterChange()">
-                      <option value=''>All</option>
-                      <option data-ng-repeat="user in users" value="{{user}}">{{user}}</option>
-                    </select>
-                  </span>
+                  <select data-ng-model="ownerFilter" data-ng-model-options='{ debounce: 1000 }'
+                    data-ng-change="ownerFilterChange()">
+                    <option value=''>All</option>
+                    <option data-ng-repeat="user in users" value="{{user}}">{{user}}</option>
+                  </select>
+                </span>
               </div>
               <div class="col-md-2 col-xs-2">
-                <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40" ng-show='searchUpdating'></md-progress-circular>
+                <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="40"
+                  ng-show='searchUpdating'></md-progress-circular>
               </div>
             </div>
           </div>
@@ -94,43 +94,41 @@
               <tbody>
                 <tr data-ng-repeat="link in links">
                   <td>
-                    <md-checkbox aria-label="Select" ng-checked="exists(link._id, selected)" ng-click="toggle(link._id, selected)" style="width:20px;margin-bottom: 0;margin-top: 11px;"></md-checkbox>
+                    <md-checkbox aria-label="Select" ng-checked="exists(link._id, selected)"
+                      ng-click="toggle(link._id, selected)" style="width:20px;margin-bottom: 0;margin-top: 11px;">
+                    </md-checkbox>
                   </td>
                   <td class='with-button'>
                     <div style="display:inline-block; vertical-align: top;">
-                      <md-button 
-                        class="md-icon-button md-primary" 
-                        aria-label="Enable/Override" 
-                        data-ng-click="toggleLink($event, link)" 
-                        tooltip-placement="top" 
-                        uib-tooltip="Enable / Override" 
-                        tooltip-append-to-body="true"
-                        style="font-size: 20px;">
-                          <span class="fa fa-toggle-on" data-ng-hide="!link.status"></span>
-                          <span class="fa fa-toggle-off ng-hide" data-ng-hide="link.status"></span>
+                      <md-button class="md-icon-button md-primary" aria-label="Enable/Override"
+                        data-ng-click="toggleLink($event, link)" tooltip-placement="top" uib-tooltip="Enable / Override"
+                        tooltip-append-to-body="true" style="font-size: 20px;">
+                        <span class="fa fa-toggle-on" data-ng-hide="!link.status"></span>
+                        <span class="fa fa-toggle-off ng-hide" data-ng-hide="link.status"></span>
                       </md-button>
                     </div>
-                    
+
                     <div style="display:inline-block; vertical-align: top;margin: 0 15px 0 8px;">
                       <div>
-                        <a href='#/links/{{link._id}}/edit' target="_blank" 
-                            class="md-icon-button md-primary" aria-label="Edit Link" tooltip-placement="top"
-                            uib-tooltip="Edit" tooltip-append-to-body="true">
-                              <span class="logo-icon zmdi zmdi-view-dashboard"></span>
+                        <a href='#/links/{{link._id}}/edit' target="_blank" class="md-icon-button md-primary"
+                          aria-label="Edit Link" tooltip-placement="top" uib-tooltip="Edit"
+                          tooltip-append-to-body="true">
+                          <span class="logo-icon zmdi zmdi-view-dashboard"></span>
                         </a>
                       </div>
                       <div style="margin-top: 5px">
-                        <a href='#/traffics/link/list/{{link._id}}' target="_blank" 
-                          class="md-icon-button md-primary" aria-label="View Traffic" 
-                          tooltip-placement="top" uib-tooltip="Traffic" tooltip-append-to-body="true">
-                            <span class="logo-icon zmdi zmdi-traffic"></span>
+                        <a href='#/traffics/link/list/{{link._id}}' target="_blank" class="md-icon-button md-primary"
+                          aria-label="View Traffic" tooltip-placement="top" uib-tooltip="Traffic"
+                          tooltip-append-to-body="true">
+                          <span class="logo-icon zmdi zmdi-traffic"></span>
                         </a>
                       </div>
                     </div>
                   </td>
                   <td>
                     <div>
-                      <div ngclipboard data-clipboard-text="{{link.link_generated}}" ngclipboard-success="onSuccess(e);" class="link_generated">
+                      <div ngclipboard data-clipboard-text="{{link.link_generated}}" ngclipboard-success="onSuccess(e);"
+                        class="link_generated">
                         <div class="ellipsis" style="max-width: 350px;">
                           {{link.short_generated}}
                         </div>
@@ -145,7 +143,8 @@
                   </td>
                   <td>
                     <div>
-                      <div ngclipboard data-clipboard-text="{{link.link_safe}}" ngclipboard-success="onSuccess(e);" style="cursor:pointer">
+                      <div ngclipboard data-clipboard-text="{{link.link_safe}}" ngclipboard-success="onSuccess(e);"
+                        style="cursor:pointer">
                         {{link.domain_safe}}
                       </div>
                       <div style="display:none">Copied</div>
@@ -170,21 +169,22 @@
                     {{link.stats.disables.toLocaleString()}}
                   </td>
                   <td class='buttons with-button text-center' style="vertical-align: top;padding-top: 6px !important;">
-                    <a href='#/links/{{link._id}}/dup' target="_blank" class="md-icon-button md-primary" aria-label="Duplicate Link" tooltip-placement="top"
-                    uib-tooltip="Duplicate" tooltip-append-to-body="true"><span class="fa fa-copy"></span></a>
+                    <a href='#/links/{{link._id}}/dup' target="_blank" class="md-icon-button md-primary"
+                      aria-label="Duplicate Link" tooltip-placement="top" uib-tooltip="Duplicate"
+                      tooltip-append-to-body="true"><span class="fa fa-copy"></span></a>
                   </td>
                   <td class='buttons with-button text-center' style="vertical-align: top;padding-top: 6px !important;">
-                    <a href='{{link.gotosafe}}' target="_blank" 
-                        class="md-icon-button md-primary" aria-label="Safe Page" tooltip-placement="top"
-                        uib-tooltip="Safe Page" tooltip-append-to-body="true" ng-show="{{link.network === 'Outbrain'}}">
-                          <span class="logo-icon zmdi zmdi-shield-security"></span>
+                    <a href='{{link.gotosafe}}' target="_blank" class="md-icon-button md-primary" aria-label="Safe Page"
+                      tooltip-placement="top" uib-tooltip="Safe Page" tooltip-append-to-body="true"
+                      ng-show="{{link.network === 'Outbrain'}}">
+                      <span class="logo-icon zmdi zmdi-shield-security"></span>
                     </a>
                   </td>
                   <td class='buttons with-button text-center' style="vertical-align: top;padding-top: 6px !important;">
-                    <a href='{{link.gotoreal}}' target="_blank" 
-                        class="md-icon-button md-primary" aria-label="Real Page" tooltip-placement="top"
-                        uib-tooltip="Real Page" tooltip-append-to-body="true" ng-show="{{link.network === 'Outbrain'}}">
-                          <span class="logo-icon zmdi zmdi-shield-check"></span>
+                    <a href='{{link.gotoreal}}' target="_blank" class="md-icon-button md-primary" aria-label="Real Page"
+                      tooltip-placement="top" uib-tooltip="Real Page" tooltip-append-to-body="true"
+                      ng-show="{{link.network === 'Outbrain'}}">
+                      <span class="logo-icon zmdi zmdi-shield-check"></span>
                     </a>
                   </td>
                 </tr>
@@ -192,36 +192,29 @@
             </table>
           </div>
         </div>
-
-        <footer class="table-footer">
-          <div class="row">
-            <div class="col-md-6 page-num-info">
-              <span>
-                  Show 
-                  <select data-ng-model="numPerPage"
-                      data-ng-options="num for num in numPerPageOpt"
-                      data-ng-change="onNumPerPageChange()">
-                  </select> 
-                  entries per page
-                  </span>
-            </div>
-            <!-- <div class="col-md-12 visible-xs visible-sm">&nbsp;</div> -->
-            <div class="col-md-6 text-right pagination-container">
-              <ul uib-pagination 
-                class="pagination-sm" 
-                ng-model="currentPage" 
-                total-items="total" 
-                max-size="6" 
-                ng-change="select(currentPage)"
-                items-per-page="numPerPage" 
-                force-ellipses="true"
-                boundary-link-numbers="true">
-              </ul>
-            </div>
-          </div>
-        </footer>
-
       </section>
+      <footer class="table-footer">
+        <div class="row">
+          <div class="col-md-6 page-num-info">
+            <span>
+              Show
+              <select data-ng-model="numPerPage" data-ng-options="num for num in numPerPageOpt"
+                data-ng-change="onNumPerPageChange()">
+              </select>
+              entries per page
+            </span>
+          </div>
+          <!-- <div class="col-md-12 visible-xs visible-sm">&nbsp;</div> -->
+          <div class="col-md-6 text-right pagination-container">
+            <ul uib-pagination class="pagination-sm" ng-model="currentPage" total-items="total" max-size="6"
+              ng-change="select(currentPage)" items-per-page="numPerPage" force-ellipses="true"
+              boundary-link-numbers="true">
+            </ul>
+          </div>
+        </div>
+      </footer>
+
+
     </div>
   </div>
 
