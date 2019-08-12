@@ -24,7 +24,7 @@
               <div class="col-md-2 col-xs-10" style="width: 200px">
                 <md-datepicker ng-model="toDate" md-placeholder="To date"></md-datepicker>
               </div>
-              <div class="col-md-2 col-xs-10" style="width: 100px">
+              <div class="col-md-2 col-xs-10" style="width: 200px">
                 <md-button class="md-raised btn-w-lg md-primary" ng-disabled="!dateSelected()" data-ng-click="date()"
                   style="margin-left: 20px;width: 100px;min-width: 0;">
                   Go
@@ -147,40 +147,40 @@
             </table>
           </div>
         </div>
-
-        <footer class="table-footer">
-          <div class="row">
-            <div class="col-md-6 page-num-info">
-              <span>
-                Show
-                <select data-ng-model="numPerPage" data-ng-options="num for num in numPerPageOpt"
-                  data-ng-change="onNumPerPageChange()">
-                </select>
-                entries per page
-              </span>
-            </div>
-            <div class="col-md-6 page-num-info"></div>
-            <div class="col-md-6 text-right pagination-container">
-              <ul class="pagination-sm pagination ng-isolate-scope ng-valid" ng-model="currentPage"
-                boundary-links="true" aria-invalid="false">
-                <li ng-disabled="!hasPrev()" class="pagination-first ng-scope">
-                  <a href="" ng-click="firstPage()" class="ng-binding">First</a>
-                </li>
-                <li ng-disabled="!hasPrev()" class="pagination-first ng-scope">
-                  <a href="" ng-click="prevPage()" class="ng-binding">Prev</a>
-                </li>
-                <li class="pagination-last ng-scope"
-                  style="padding: 5px 8px;font-size: 12px;line-height: 20px;position: relative;float: left;margin-left: 10px;">
-                  Page {{page()}}
-                </li>
-                <li ng-disabled="!hasNext()" class="pagination-last ng-scope" style="">
-                  <a href="" ng-click="nextPage()" class="ng-binding">Next</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </footer>
       </section>
+      <footer class="table-footer">
+        <div class="row">
+          <div class="col-md-6 page-num-info">
+            <span>
+              Show
+              <select data-ng-model="numPerPage" data-ng-options="num for num in numPerPageOpt"
+                data-ng-change="onNumPerPageChange()">
+              </select>
+              entries per page
+            </span>
+          </div>
+          <div class="col-md-6 page-num-info"></div>
+          <div class="col-md-6 text-right pagination-container">
+            <ul class="pagination-sm pagination ng-isolate-scope ng-valid" ng-model="currentPage" boundary-links="true"
+              aria-invalid="false">
+              <li ng-disabled="!hasPrev()" class="pagination-first ng-scope">
+                <a href="" ng-click="firstPage()" class="ng-binding">First</a>
+              </li>
+              <li ng-disabled="!hasPrev()" class="pagination-first ng-scope">
+                <a href="" ng-click="prevPage()" class="ng-binding">Prev</a>
+              </li>
+              <li class="pagination-last ng-scope"
+                style="padding: 5px 8px;font-size: 12px;line-height: 20px;position: relative;float: left;margin-left: 10px;">
+                Page {{page()}}
+              </li>
+              <li ng-disabled="!hasNext()" class="pagination-last ng-scope" style="">
+                <a href="" ng-click="nextPage()" class="ng-binding">Next</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+
     </div>
   </div>
 

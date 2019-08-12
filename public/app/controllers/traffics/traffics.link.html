@@ -28,9 +28,8 @@
               <div class="col-md-2 col-xs-10" style="width: 200px">
                 <md-datepicker ng-model="toDate" md-placeholder="To date"></md-datepicker>
               </div>
-              <div class="col-md-2 col-xs-10" style="width: 100px">
-                <md-button class="md-raised btn-w-lg md-primary" ng-disabled="!dateSelected()" data-ng-click="date()"
-                  style="margin-left: 20px;width: 100px;min-width: 0;">
+              <div class="col-md-2 col-xs-10" style="width: 200px">
+                <md-button class="md-raised btn-w-lg md-primary" ng-disabled="!dateSelected()" data-ng-click="date()">
                   Go
                 </md-button>
               </div>
@@ -44,7 +43,7 @@
             </div>
             <div class='divider divider-md' style="height: 1px;margin: 10px 0;"></div>
             <div class="row">
-              <div class="col-md-3 col-xs-10" ng-show="admin" ng-cloak>
+              <div class="col-md-3 col-xs-4" ng-show="admin" ng-cloak>
                 <span class="ui-select" style="display: block">
                   <select data-ng-model="ownerFilter" data-ng-model-options='{ debounce: 1000 }'
                     data-ng-change="ownerFilterChange()">
@@ -53,7 +52,7 @@
                   </select>
                 </span>
               </div>
-              <div class="col-md-3 col-xs-10">
+              <div class="col-md-3 col-xs-6">
                 <input type="text" placeholder="Search IP/Referer..." class="form-control" data-ng-model="searchReferer"
                   data-ng-model-options='{ debounce: 1000 }' data-ng-change="searchKeywordChange()">
               </div>
@@ -205,7 +204,7 @@
             </table>
           </div>
         </div>
-
+      </section>
         <footer class="table-footer">
           <div class="row">
             <div class="col-md-6 page-num-info">
@@ -238,7 +237,7 @@
             </div>
           </div>
         </footer>
-      </section>
+      
     </div>
   </div>
 

@@ -20,14 +20,14 @@
                     </md-select>
                   </md-input-container>
 
-                  <md-input-container style="margin-left: 20px; width: 200px;">
+                  <md-input-container style="width: 200px;">
                     <label>Select an Network</label>
                     <md-select ng-model="link.network" ng-change="networkChange()">
                       <md-option ng-repeat="net in networks" value="{{net}}">{{net}}</md-option>
                     </md-select>
                   </md-input-container>
 
-                  <md-input-container style="margin-left: 20px; width: 200">
+                  <md-input-container style="width: 200px">
                     <label>Enable Time<!-- (EST)--></label>
                     <md-select ng-model="link.enable_at">
                       <md-option ng-repeat="time in times" ng-value="{{time.val}}">{{time.text}}</md-option>
@@ -35,7 +35,7 @@
                   </md-input-container>
 
                   <!--11.25 alex added-->
-                  <md-input-container style="margin-left: 20px; width: 200">
+                  <md-input-container style="width: 200px">
                     <label>Disable Time<!-- (EST)--></label>
                     <md-select ng-model="link.disable_at">
                       <md-option ng-repeat="time in times" ng-value="{{time.val}}">{{time.text}}</md-option>
@@ -43,7 +43,9 @@
                   </md-input-container>
 
                   <!-- 4/28/19 added by Jin -->
-                  <md-checkbox style="margin-left: 20px;" ng-model="link.block_corporate" aria-label="Block Corporate">Block Corporate</md-checkbox>
+                  <md-checkbox ng-model="link.block_corporate" aria-label="Block Corporate" style="width: 150px;">Block Corporate</md-checkbox>
+                  <!-- 8/12/2019 added by Jin -->
+                  <md-checkbox ng-model="" aria-label="ASO Whitelist" style="width: 150px;">ASO Whitelist</md-checkbox>
 
                 </div>
 
@@ -105,14 +107,14 @@
                 </md-input-container>
 
                 <md-input-container class="md-block">
-                  <label>GDPR_CONSENT</label>
-                  <input ng-model="query.gdpr_consent" pattern="^[ 0-9a-zA-Z_+-]*$" ng-pattern-restrict ng-change="generateLink()">
+                  <label>UTM Term (melissa_mccarthy+election)</label>
+                  <input ng-model="query.utm_term" pattern="^[0-9a-zA-Z_+-]*$" ng-pattern-restrict ng-change="generateLink()">
                   <div class="hint">Identify the paid keywords (optional)</div>
                 </md-input-container>
 
                 <md-input-container class="md-block">
-                  <label>GDPR</label>
-                  <input ng-model="query.gdpr" pattern="^[0-9a-zA-Z_-]*$" ng-pattern-restrict ng-change="generateLink()">
+                  <label>UTM Content (logolink, textlink)</label>
+                  <input ng-model="query.utm_content" pattern="^[0-9a-zA-Z_-]*$" ng-pattern-restrict ng-change="generateLink()">
                   <div class="hint">Use to differentiate ads (optional)</div>
                 </md-input-container>
                 
@@ -256,7 +258,8 @@
                   <div class="space"></div>
                   <md-button class="md-raised btn-w-md" data-ng-click="gotoLinks()">Back</md-button>
                   <div class="space" style="margin-right: 40px;"></div>
-                  <md-checkbox ng-model="link.use_ip_blacklist" aria-label="Filter blacklisted IP and geolocations">Filter blacklisted IP and geolocations</md-checkbox>
+                  <md-checkbox ng-model="link.use_ip_blacklist" aria-label="Filter blacklisted IP and geolocations" style="margin-top: 20px;
+                  margin-right: 20px;">Filter blacklisted IP and geolocations</md-checkbox>
 
                 </div>
               </form>
