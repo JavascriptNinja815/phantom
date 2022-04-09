@@ -28,7 +28,7 @@
     "lodash": "^4.17.4",
     "mailgun": "^0.5.0",
     "maxmind": "^2.3.0",
-    "moment": "^2.19.2",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.14",
     "mongoose": "^4.13.5",
     "mongoose-bcrypt": "^1.5.0",
